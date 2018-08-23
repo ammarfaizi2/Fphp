@@ -12,6 +12,12 @@ use Fphp\Exceptions\FphpException;
  */
 final class Fphp
 {
+	const LOGIN_SUCCESS = 1;
+
+	const LOGIN_FAILED = 2;
+
+	const LOGIN_CHECKPOINT = 3;
+
 	/**
 	 * @var string
 	 */
@@ -51,10 +57,10 @@ final class Fphp
 			throw new FphpException("Could not create the cookie file");
 		}
 		if (! is_readable($this->cookieFile)) {
-			throw new FphpException("Cookie file is not readable");
+			throw new FphpException("Cookie file is not readable: {$this->cookieFile}");
 		}
 		if (! is_writable($this->cookieFile)) {
-			throw new FphpException("Cookie file is not writeable");
+			throw new FphpException("Cookie file is not writeable: {$this->cookieFile}");
 		}
 
 		$this->http = new HttpClient(
@@ -75,9 +81,9 @@ final class Fphp
 	/**
 	 * @param bool $force
 	 * @throws \Fphp\Exceptions\FphpException
-	 * @return string
+	 * @return int
 	 */
-	public function login(bool $force = false): string
+	public function login(bool $force = false): int
 	{
 		if ($force) {
 			if (unlink($this->cookieFile)) {
@@ -144,25 +150,25 @@ final class Fphp
 			]);
 
 			if (! file_exists($this->cookieFile)) {
-				return "failed";
+				return self::LOGIN_FAILED;
 			}
 
 			$cookie = file_get_contents($this->cookieFile);
 
 			if (preg_match("/checkpoint/", $cookie)) {
-				return "checkpoint";
+				return self::LOGIN_CHECKPOINT;
 			}
 
 			if (preg_match("/c_user/", $cookie)) {
-				return "success";
+				return self::LOGIN_SUCCESS;
 			} else {
-				return "login_failed";
+				return self::LOGIN_FAILED;
 			}
 		}
 
 		$cookie = file_get_contents($this->cookieFile);
 		if (preg_match("/c_user/", $cookie)) {
-			return "success";
+			return self::LOGIN_SUCCESS;
 		}
 		
 		throw new FphpException("Coult not find the login form");
