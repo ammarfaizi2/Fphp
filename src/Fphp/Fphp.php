@@ -67,15 +67,45 @@ final class Fphp
 
 		$l["out"] = file_get_contents("out.tmp");
 
-		if (preg_match(
-			"/(?:<form method=\"post\" action=\")(.*)(?:\")/Usi",
-			$l["out"],
-			$m
-		)) {
-			
+		if (preg_match("/(?:<form method=\"post\" action=\")(.*)(?:\")/Usi", $l["out"], $m)) {
+			$actionUrl = fe($m[1]);
+			$postData = [
+				"email" => $this->email,
+				"pass" => $this->pass
+			];
+
+			/**
+			 * Get hidden input values.
+			 */
+			if (preg_match_all("/<input[^\>]+type=\"hidden\".+>/Usi", $l["out"], $m)) {
+				foreach ($m[0] as $v) {
+					if (preg_match("/(?:name=\")(.*)(?:\")/Usi", $v, $m)) {
+						$key = fe($m[1]);
+						if (preg_match("/(?:value=\")(.*)(?:\")/Usi", $v, $m)) {
+							$val = fe($m[1]);
+						} else {
+							$val = "";
+						}
+						$postData[trim($key)] = trim($val);
+					}
+				}
+			} else {
+				throw new FphpException("Could not find hidden input");
+			}
+
+			/**
+			 * Get submit button value.
+			 */
+			if (preg_match("/<input[^\>]+name=\"login\".+/Usi", $l["out"], $m)) {
+				if (preg_match("/(?:value=\")(.*)(?:\")/Usi", $m[0], $m)) {
+					$postData["login"] = trim(fe($m[1]));
+				}
+			}
 		}
 
-		var_dump($m);
+		var_dump($postData);
+
+		
 
 		return !1;
 	}
