@@ -179,6 +179,5 @@ final class Fphp
 	 */
 	public function httpStream()
 	{
-		
 	}
 }
