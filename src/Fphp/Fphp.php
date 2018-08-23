@@ -173,4 +173,12 @@ final class Fphp
 		
 		throw new FphpException("Coult not find the login form");
 	}
+
+	/**
+	 * @return void
+	 */
+	public function httpStream()
+	{
+		
+	}
 }
