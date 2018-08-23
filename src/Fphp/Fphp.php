@@ -2,6 +2,8 @@
 
 namespace Fphp;
 
+use Fphp\Exceptions\FphpException;
+
 /**
  * @author Ammar Faizi <ammarfaizi2@gmail.com>
  * @license MIT
@@ -51,8 +53,30 @@ final class Fphp
 		);
 	}
 
-	public function login()
+	/**
+	 * @throws \Fphp\Exceptions\FphpException
+	 * @return bool
+	 */
+	public function login(): bool
 	{
-		$this->http->exec("https://m.facebook.com/");
+		// $l = $this->http->exec("https://m.facebook.com/");
+
+		// if ($l["errno"]) {
+		// 	throw new FphpException($l["error"]);
+		// }
+
+		$l["out"] = file_get_contents("out.tmp");
+
+		if (preg_match(
+			"/(?:<form method=\"post\" action=\")(.*)(?:\")/Usi",
+			$l["out"],
+			$m
+		)) {
+			
+		}
+
+		var_dump($m);
+
+		return !1;
 	}
 }

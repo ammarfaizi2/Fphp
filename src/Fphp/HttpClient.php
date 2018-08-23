@@ -21,7 +21,7 @@ class HttpClient
 			CURLOPT_SSL_VERIFYPEER => false,
 			CURLOPT_SSL_VERIFYHOST => false,
 			CURLOPT_FOLLOWLOCATION => false,
-			CURLOPT_USERAGENT => $this->userAgent
+			CURLOPT_USERAGENT => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0"
 		];
 		foreach ($opt as $key => $value) {
 			$this->curlOptions[$key] = $value;

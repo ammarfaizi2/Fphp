@@ -12,6 +12,9 @@
     "minimum-stability": "stable",
     "require": {},
     "autoload": {
+        "files": [
+            "src/helpers.php"
+        ],
         "psr-4": {
             "Fphp\\": "src/Fphp/"
         }
